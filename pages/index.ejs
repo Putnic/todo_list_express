@@ -1,0 +1,89 @@
+﻿<%- include('header'); -%>
+
+	
+	<div class="card">
+		<div class="card-header " style="background-color: #e3f2fd;">
+			<h1 class="text-center">ToDo List</h1>
+		</div>
+		<div class="card-body table-responsive">
+			<h6 class="card-title">Training project on Express.</h6>
+
+			<p class="card-text">Implemented the following functions (CRUD): Create item; Update item; Delete item</p>
+
+			<div class="text-right mb-1">
+				<%- !edit ? '<a href="add" class="btn btn-outline-dark">Add item</a> \
+										<a href="edit" class="btn btn-outline-dark">Edit items</a>' 
+					: 				'<a href="/" class="btn btn-outline-dark">Done</a>' 
+				%>
+			</div>
+			
+			<table class="table table-sm" id="tasks">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Name</th>
+						<th scope="col">Description</th>
+						<th scope="col" class="text-center">Completed</th>
+						<% if (edit) { %>
+							<th scope="col" class="text-center">Edit/Delete</th>
+						<% } %>
+					</tr>
+				</thead>
+				<tbody>
+					<% rows.forEach(function(row, index){ %>
+						<tr class="<%= row.completed ? 'bg-success font-weight-light text-white' : '' %>">
+							<th scope="row"><%= ++index %>.</th>
+							<td><%= row.name %></td>
+							<td><%= row.description %></td>
+							<td class="text-center font-weight-bold"><%= row.completed ? 'Yes' : 'No' %></td>
+							<% if (edit) { %>
+								<td class="text-center">
+									<a href="/edit/<%= row.id %>" class="fas fa-edit btn btn-light btn-sm"></a>
+									<a href="" class="fas fa-trash-alt btn btn-light btn-sm" data-id="<%= row.id %>" data-action="delete" data-index="<%= index %>"></a>
+								</td>
+							<% } %>
+						</tr>
+					<% }); %>
+		
+				</tbody>
+			</table>
+		</div>
+		<div class="card-footer text-muted text-right">
+			<!-- <%- !edit ? '	<a href="add" class="btn btn-secondary">Add item!</a> \
+										<a href="edit" class="btn btn-dark">Edit items!</a>' 
+				: 			' <a href="/" class="btn btn-secondary">Done!</a>' 
+			%> -->
+		</div>
+	</div>
+
+<script>
+	window.onload = function () {
+		let tableTask = document.getElementById('tasks');
+		// document.getElementById('tasks').tBodies[0].rows[0].cells[0].innerHTML
+		let rows = tableTask.tBodies[0].rows;
+
+		tableTask.tBodies[0].addEventListener('click', function (e) {
+			let action = e.target.dataset;
+
+			if (action['action'] === 'delete') {
+				e.preventDefault(); 
+				// запрос для редактирования элемента 
+				let xhr = new XMLHttpRequest();
+				console.log('Row index: ', e.path[2].rowIndex);
+				xhr.open('DELETE', `/edit/${action['id']}`);
+				xhr.send();
+				xhr.onload = function () {
+					console.log(`item id:${action['id']} deleted`);
+					tableTask.deleteRow(action['index']);
+
+					for (let i = 0; i < rows.length; i++) {
+						rows[i].cells[0].innerHTML = `${i + 1}.`;
+					}
+				}
+
+			}
+		})
+	}
+</script>
+
+<%- include('footer'); -%>

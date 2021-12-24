@@ -1,0 +1,26 @@
+{
+  "name": "todo_list_express",
+  "version": "1.0.0",
+  "description": "CRUD Express, training project",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
+  "author": "Dmitry Polyakov",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0",
+    "pg": "^7.7.1"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
